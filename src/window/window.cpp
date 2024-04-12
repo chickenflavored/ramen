@@ -81,6 +81,8 @@ void window::poll_events()
 		{
 			focus = false;
 		}
+
+		ui::global().update_keyboard_state(evt);
 	}
 }
 
@@ -91,19 +93,20 @@ void window::update(float dt)
 	ui::global().set_player_coords(renderer::global().get_player_coords());
 
 	//set ui fps to fps
-	ui::global().set_fps(1000 / dt);
+	ui::global().set_fps_str(1000 / dt);
 
 	if (focus)
 	{
 		renderer::global().update(dt);
+		ui::global().update(dt);
 	}
 
-	renderer::global().draw();
+	renderer::global().render();
 	sf_window->pushGLStates();
 
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	ui::global().draw();
+	ui::global().render();
 	sf_window->popGLStates();
 	sf_window->display();
 }

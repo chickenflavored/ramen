@@ -147,8 +147,8 @@ void world_terrain::init_shaders()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    vertex_shader = load_shader(GL_VERTEX_SHADER, "src/world/terrain/terrain_vert.glsl");
-    fragment_shader = load_shader(GL_FRAGMENT_SHADER, "src/world/terrain/terrain_frag.glsl");
+    vertex_shader = load_shader(GL_VERTEX_SHADER, "assets/shaders/terrain/terrain_vert.glsl");
+    fragment_shader = load_shader(GL_FRAGMENT_SHADER, "assets/shaders/terrain/terrain_frag.glsl");
     shader_program = link_program();
 
     glDeleteShader(vertex_shader);
@@ -215,7 +215,7 @@ void world_terrain::render(const glm::mat4& model, const glm::mat4& view, const 
 
 
     //create a model that's 300x the size of the terrain
-    glm::mat4 new_model = glm::scale(model, glm::vec3(400, 400, 400));
+    glm::mat4 new_model = glm::scale(model, glm::vec3(800, 800, 800));
 
     glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(new_model));
     glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));

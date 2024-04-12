@@ -14,5 +14,6 @@ void main()
 {
     fragPosition = inPosition;
     gl_Position = projection * view * model * vec4(inPosition, 1.0);
-    tex_coords = a_tex_coords;
+    tex_coords.x = a_tex_coords.x * 4;
+    tex_coords.y = a_tex_coords.y * 4;
 }

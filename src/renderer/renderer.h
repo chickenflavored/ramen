@@ -12,6 +12,8 @@
 #include "../world/terrain/world_terrain.h"
 #include "../world/water/water.h"
 
+#include "../ui/ui.h"
+
 class renderer
 {
 public:
@@ -19,7 +21,7 @@ public:
 	void init(sf::RenderWindow* w_ptr);
 
 	void update(float dt);
-	void draw();
+	void render();
 
 	sf::Vector3f get_player_coords();
 private:
@@ -48,7 +50,4 @@ private:
 
 	bool mouse_right_held;
 
-
-	bool wireframe;
-	bool tilde_down;
 };

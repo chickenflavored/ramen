@@ -16,7 +16,7 @@ void main()
     //get the color from the texture
     vec4 texColor = texture(texture0, tex_coords);
 
-    if (normalizedHeight < 0.005)
+    if (normalizedHeight < 0.001)
     {
         discard;
     }

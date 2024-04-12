@@ -2,6 +2,9 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "../gl/tiny_obj_loader.h"
+
 renderer& renderer::global()
 {
 	static renderer instance;
@@ -16,8 +19,6 @@ void renderer::init(sf::RenderWindow* w_ptr)
 
 	cam_pitch = 0;
 
-
-	tilde_down = false;
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
@@ -39,14 +40,14 @@ void renderer::init(sf::RenderWindow* w_ptr)
 	// initialize the projection matrix to a perspective projection
 	projection = glm::perspective(glm::radians(80.f), // field of view angle
 		(float)1600 / (float)900, // aspect ratio
-		5.f, // near clipping plane
-		170000.f); // far clipping plane
+		3.0f, // near clipping plane
+		250000.f); // far clipping plane
 
 
 	//move camera up to simulate being a person in the world
-	position.y += 225;
-	position.x += 179525.f;
-	position.z -= 87288.f;
+	position.y += 605; 
+	position.x += 263525.f;
+	position.z -= 185288.f;
 
 	std::cout << "calling water init\n";
 	g_water = new water();
@@ -130,79 +131,70 @@ void renderer::update(float dt)
 
 	float distance = speed * dt; // camera distance per frame
 
-	// check if the W key is pressed
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	//move camera only if ui's console isn't open
+	if (!ui::global().is_console_open())
 	{
-		// move the camera forward along the horizontal direction vector
-		glm::vec3 horizontal_direction = glm::vec3(direction.x, 0.0f, direction.z);
-		position += horizontal_direction * distance;
-		target += horizontal_direction * distance;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		// move the camera backward along the horizontal direction vector
-		glm::vec3 horizontal_direction = glm::vec3(direction.x, 0.0f, direction.z);
-		position -= horizontal_direction * distance;
-		target -= horizontal_direction * distance;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-	{
-		// move the camera left along the right vector
-		position -= right * distance;
-		target -= right * distance;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-	{
-		// move the camera right along the right vector
-		position += right * distance;
-		target += right * distance;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-	{
-		glm::quat rotation = glm::angleAxis(angle, up);
-		target = rotation * (target - position) + position;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
-	{
-		// rotate the camera right around the up vector
-		glm::quat rotation = glm::angleAxis(-angle, up);
-		target = rotation * (target - position) + position;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-	{
-		// move the camera up along the up vector
-		position += up * distance;
-		target += up * distance;
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
-	{
-		// move the camera down along the up vector
-		position -= up * distance;
-		target -= up * distance;
-	}
-
-	//if tilde is released, toggle wireframe mode
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tilde))
-	{
-		tilde_down = true;
-	}
-	else
-	{
-		if (tilde_down)
+		// check if the W key is pressed
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
-			wireframe = !wireframe;
-			tilde_down = false;
+			// move the camera forward along the horizontal direction vector
+			glm::vec3 horizontal_direction = glm::vec3(direction.x, 0.0f, direction.z);
+			position += horizontal_direction * distance;
+			target += horizontal_direction * distance;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		{
+			// move the camera backward along the horizontal direction vector
+			glm::vec3 horizontal_direction = glm::vec3(direction.x, 0.0f, direction.z);
+			position -= horizontal_direction * distance;
+			target -= horizontal_direction * distance;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		{
+			// move the camera left along the right vector
+			position -= right * distance;
+			target -= right * distance;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		{
+			// move the camera right along the right vector
+			position += right * distance;
+			target += right * distance;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+		{
+			glm::quat rotation = glm::angleAxis(angle, up);
+			target = rotation * (target - position) + position;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+		{
+			// rotate the camera right around the up vector
+			glm::quat rotation = glm::angleAxis(-angle, up);
+			target = rotation * (target - position) + position;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+		{
+			// move the camera up along the up vector
+			position += up * distance;
+			target += up * distance;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+		{
+			// move the camera down along the up vector
+			position -= up * distance;
+			target -= up * distance;
 		}
 	}
+	
 
-	if (wireframe)
+	if (ui::global().set_wireframe())
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
@@ -210,6 +202,8 @@ void renderer::update(float dt)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+
+
 
 
 	//check if mouse right button is held down
@@ -295,7 +289,7 @@ sf::Vector3f renderer::get_player_coords()
 	return sf::Vector3f(position.x, position.y, position.z);
 }
 
-void renderer::draw()
+void renderer::render()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

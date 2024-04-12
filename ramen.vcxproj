@@ -139,6 +139,7 @@
     <ClInclude Include="src\gl\glad.h" />
     <ClInclude Include="src\gl\khrplatform.h" />
     <ClInclude Include="src\gl\stb_image.h" />
+    <ClInclude Include="src\gl\tiny_obj_loader.h" />
     <ClInclude Include="src\renderer\renderer.h" />
     <ClInclude Include="src\ui\ui.h" />
     <ClInclude Include="src\window\window.h" />

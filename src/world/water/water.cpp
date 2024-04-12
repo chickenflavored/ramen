@@ -39,8 +39,8 @@ void water::init()
 
 	glBindVertexArray(0);
 
-	vertex_shader = load_shader(GL_VERTEX_SHADER, "src/world/water/water_vert.glsl");
-	fragment_shader = load_shader(GL_FRAGMENT_SHADER, "src/world/water/water_frag.glsl");
+	vertex_shader = load_shader(GL_VERTEX_SHADER, "assets/shaders/water/water_vert.glsl");
+	fragment_shader = load_shader(GL_FRAGMENT_SHADER, "assets/shaders/water/water_frag.glsl");
 
 	shader_program = link_program();
 	model_loc = glGetUniformLocation(shader_program, "model");
@@ -106,9 +106,9 @@ void water::render(const glm::mat4& model, const glm::mat4& view, const glm::mat
 
 	//glm::mat4 new_model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2000.5f, 0.0f));
 
-	glm::mat4 new_model = glm::scale(model, glm::vec3(500000, 500000, 0));
+	glm::mat4 new_model = glm::scale(model, glm::vec3(500000, 500000, 1));
 	//translate new_model up a bit
-	new_model = glm::translate(new_model, glm::vec3(0.0f, 0.0f, 0.0005f));
+	new_model = glm::translate(new_model, glm::vec3(0.0f, 0.0f, -2.0f));
 
 
 	glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(new_model));
