@@ -39,7 +39,7 @@ world_terrain::world_terrain()
 
 void world_terrain::load()
 {
-    const char* path = "assets/world/hehe.png";
+    const char* path = "assets/world/terrain/hehe.png";
     map_data = stbi_load(path, &map_width, &map_height, &map_channels, 0);
     if (!map_data)
     {
@@ -48,7 +48,7 @@ void world_terrain::load()
     }
 
 
-    map_texture = stbi_load("assets/world/new_tex.png", &texture_width, &texture_height, &texture_channels, 0);
+    map_texture = stbi_load("assets/world/terrain/new_tex.png", &texture_width, &texture_height, &texture_channels, 0);
 
     if (!map_texture)
 	{

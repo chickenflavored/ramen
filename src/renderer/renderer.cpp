@@ -2,8 +2,6 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include "../gl/tiny_obj_loader.h"
 
 renderer& renderer::global()
 {
@@ -49,14 +47,14 @@ void renderer::init(sf::RenderWindow* w_ptr)
 	position.x += 263525.f;
 	position.z -= 185288.f;
 
-	std::cout << "calling water init\n";
 	g_water = new water();
 	g_water->init();
 
 	g_world_terrain = new world_terrain();
 	g_world_terrain->load();
 
-
+	g_statue = new statue();
+	g_tree = new tree();
 }
 
 std::string renderer::read_file(const std::string& path)
@@ -119,7 +117,7 @@ GLuint renderer::link_program(GLuint vertex_shader, GLuint fragment_shader)
 
 void renderer::update(float dt)
 {
-	float speed = 2.f; // camera speed per second
+	float speed = .2f; // camera speed per second
 	float angle = dt * 0.005f; // camera angle per second
 
 	// get the direction vector of the camera
@@ -203,7 +201,7 @@ void renderer::update(float dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
-
+	
 
 
 	//check if mouse right button is held down
@@ -297,4 +295,6 @@ void renderer::render()
 
 	g_water->render(model, view, projection);
 	g_world_terrain->render(model, view, projection);
+	g_statue->render(model, view, projection);
+	g_tree->render(model, view, projection);
 }
