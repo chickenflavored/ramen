@@ -36,7 +36,8 @@ private:
 	uint32_t num_instances;
 
 	GLuint vao, vbo, ebo;
-	GLuint instance_vbo;
+	GLuint tree_positions_vbo;
+	GLuint tree_positions_attrib;
 	GLuint vertex_shader, fragment_shader;
 	GLuint shader_program;
 };

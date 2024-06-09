@@ -23,7 +23,12 @@ tree::tree()
 		glm::vec3(263925, 185388, 430),
 		glm::vec3(263955, 185388, 430),
 		glm::vec3(263985, 185388, 430),
+		glm::vec3(263925, 185428, 430),
+		glm::vec3(263955, 185488, 430),
+		glm::vec3(263985, 185528, 430)
 	};
+
+	num_instances = tree_positions.size();
 
 	load_obj();
 	setup_buffers();
@@ -156,6 +161,17 @@ void tree::setup_buffers()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
 	glEnableVertexAttribArray(2);
 
+	glGenBuffers(1, &tree_positions_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, tree_positions_vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * tree_positions.size(), tree_positions.data(), GL_STATIC_DRAW);
+
+	tree_positions_attrib = glGetAttribLocation(shader_program, "tree_position");
+	glEnableVertexAttribArray(tree_positions_attrib);
+	glVertexAttribPointer(tree_positions_attrib, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+	glVertexAttribDivisor(tree_positions_attrib, 1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	// Unbind the VAO
 	glBindVertexArray(0);
 }
@@ -232,12 +248,13 @@ void tree::check_shader_link(GLuint program)
 
 void tree::render(glm::mat4 model, glm::mat4 view, glm::mat4 projection)
 {
+	glUseProgram(shader_program);
+
 	glm::mat4 new_model = glm::translate(model, glm::vec3(263925, 185388, 430));
 	//rotate new_model 90 degrees around the x-axis
 	new_model = glm::rotate(new_model, glm::radians(90.0f), glm::vec3(1, 0, 0));
 	new_model = glm::scale(new_model, glm::vec3(15, 15, 15));
 
-	glUseProgram(shader_program);
 
 	// Set the model, view and projection matrices
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_FALSE, glm::value_ptr(new_model));
